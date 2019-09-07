@@ -1,13 +1,13 @@
 ---
-# This is my first playbook
+# This playbook will download, unzip, install and start Apache Tomcat
 
 # HEADER SECTION
- - name: This playbook will create a file
+ - name: This playbook will download, unzip, install and start Apache Tomcat
    hosts: webservers
    vars:
      java: java-1.8.0-openjdk-devel
-     url: http://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.41/bin/apache-tomcat-8.5.41.tar.gz
-     tomcat: apache-tomcat-8.5.41
+     url: http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
+     tomcat: apache-tomcat-8.5.43
 
 # TASK SECTION
    tasks:
@@ -15,6 +15,14 @@
        yum:
          name: "{{ java }}"
          state: installed
+       when: ( ansible_distribution == "RedHat" and ansible_distribution_version == "8.0" )
+
+     - name: To install dependency
+       apt:
+         name: "{{ java }}"
+         state: installed
+       when:
+         ansible_distribution == "Ubuntu"
 
      - name: To create a group
        group:
@@ -37,26 +45,26 @@
        get_url: 
          url: "{{ url }}" 
          mode: 0755
-         dest: /opt/"{{ tomcat }}".tar.gz
+         dest: /opt/{{ tomcat }}.tar.gz
          backup: yes
          timeout: 20
 
      - name: To untar and unzip the package
        unarchive:
-         src: /opt/"{{ tomcat }}".tar.gz
+         src: /opt/{{ tomcat }}.tar.gz
          dest: /opt/
          mode: 0755
          remote_src: yes
 
      - name: to fetch the server.xml file from remote servers
        fetch:
-         src: /opt/apache-tomcat-8.5.37/conf/server.xml
+         src: /opt/apache-tomcat-8.5.43/conf/server.xml
          dest: /opt/
 
      - name: To update the apache tomcat config
        copy:
-         src: /opt/playbooks/server.xml
-         dest: /opt/apache-tomcat-8.5.37/conf/server.xml
+         src: /opt/server.xml
+         dest: /opt/apache-tomcat-8.5.43/conf/server.xml
 
      - name: To start apache tomcat
-       command: nohup /opt/apache-tomcat-8.5.37/bin/startup.sh &
+       command: nohup /opt/apache-tomcat-8.5.43/bin/startup.sh &

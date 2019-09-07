@@ -2,10 +2,10 @@
 # This is my first playbook
 
 # HEADER SECTION
- - name: This playbook will create a file
+ - name: This playbook will install a package and create a file
    hosts: webservers
    vars:
-     mypackage: unzip
+     mypackage: vim
      myfile: helloworld.txt
 
 # TASK SECTION
@@ -13,7 +13,7 @@
      - name: To install package named "{{ mypackage }}"
        yum:
          name: "{{ mypackage }}"
-         state: absent
+         state: installed
 
      - name: To create a file named "{{ myfile }}"
        file:

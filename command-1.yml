@@ -1,0 +1,12 @@
+---
+# This is my first playbook
+
+# HEADER SECTION
+ - name: This playbook will create a file
+   hosts: webservers
+
+# TASK SECTION
+   tasks:
+
+     - name: To create a folder using command module
+       command: unzip /opt/apache-maven-3.6.1-bin.zip

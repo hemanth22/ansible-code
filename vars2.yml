@@ -12,4 +12,4 @@
      - name: To install package named "{{ mysoftware }}"
        yum:
          name: "{{ mysoftware }}"
-         state: installed
+         state: absent
